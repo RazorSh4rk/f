@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	f "github.com/RazorSh4rk/F"
+	"github.com/RazorSh4rk/f"
 )
 
 func TestSimple(t *testing.T) {
