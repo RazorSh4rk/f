@@ -36,7 +36,7 @@ fn.ForAll(func (element T) bool {
 })
 
 // does any element in the F satisfy the predicate
-fn.HasAny(func (element T) bool {
+fn.Has(func (element T) bool {
     // return some condition
 })
 ```
