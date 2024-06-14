@@ -23,3 +23,12 @@ func (f F[T]) Has(fn func(T) bool) bool {
 	}
 	return false
 }
+
+func (f F[T]) Find(fn func(T) bool) Option[T] {
+	for _, el := range f.Val {
+		if fn(el) {
+			return NewOptT(el)
+		}
+	}
+	return NewOptE[T](nil)
+}

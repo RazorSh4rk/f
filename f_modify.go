@@ -1,19 +1,23 @@
 package f
 
-func (f F[T]) Head() T {
+import "errors"
+
+var (
+	ErrEmptyList = errors.New("empty list")
+)
+
+func (f F[T]) Head() Option[T] {
 	if len(f.Val) == 0 {
-		var _h T
-		return _h
+		return NewOptE[T](ErrEmptyList)
 	}
-	return f.Val[0]
+	return NewOpt(f.Val[0], nil)
 }
 
-func (f F[T]) Last() T {
+func (f F[T]) Last() Option[T] {
 	if len(f.Val) == 0 {
-		var _h T
-		return _h
+		return NewOptE[T](ErrEmptyList)
 	}
-	return f.Val[len(f.Val)-1]
+	return NewOpt(f.Val[len(f.Val)-1], nil)
 }
 
 func (f F[T]) Tail() F[T] {

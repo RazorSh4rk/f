@@ -18,11 +18,12 @@ fn := f.F[T]{
 }
 
 fn := f.Gen(func (index int) T {
-    return index * T // or something else
-})
+    return T(index) // or something else
+}, limit int)
+// limit is the number of elements to generate
 ```
 
-Consumer function over an F:
+Consumer function over a F:
 
 ```golang
 // run a function over each element
@@ -41,7 +42,7 @@ fn.Has(func (element T) bool {
 })
 ```
 
-Modifier function over an F (do not change type):
+Modifier function over a F (changes type):
 
 ```golang
 // Get first value
@@ -80,7 +81,7 @@ fn.Zip(f.F[T]{
 })
 ```
 
-Transformer function over an F (change type):
+Transformer function over an F (doesn't change type):
 
 ```golang
 // Map values to a new type

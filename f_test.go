@@ -65,10 +65,20 @@ func TestHas(t *testing.T) {
 }
 
 func TestHead(t *testing.T) {
+	// Test Ok
 	fn := f.From([]int{1, 2, 3})
 	head := fn.Head()
 
-	if head != 1 {
+	res, _ := head.Get()
+	if res != 1 {
+		t.Fail()
+	}
+
+	// Test Err
+	fn = f.From([]int{})
+	head = fn.Head()
+
+	if head.Ok() {
 		t.Fail()
 	}
 }
@@ -77,7 +87,8 @@ func TestLast(t *testing.T) {
 	fn := f.From([]int{1, 2, 3})
 	last := fn.Last()
 
-	if last != 3 {
+	res, _ := last.Get()
+	if res != 3 {
 		t.Fail()
 	}
 }
@@ -85,8 +96,6 @@ func TestLast(t *testing.T) {
 func TestTail(t *testing.T) {
 	fn := f.From([]int{1, 2, 3})
 	tail := fn.Tail()
-
-	fmt.Println(tail)
 
 	if tail.Val[0] != 2 || tail.Val[1] != 3 {
 		t.Fail()
@@ -137,7 +146,6 @@ func TestFold(t *testing.T) {
 	})
 
 	if res != 6 {
-		fmt.Println(res)
 		t.Fail()
 	}
 }
@@ -177,6 +185,64 @@ func TestZip(t *testing.T) {
 		t.Fail()
 	}
 
+}
+
+func TestOption(t *testing.T) {
+	id := float64(1)
+	o := f.NewOpt(id, nil)
+	if o.Ok() {
+		res, _ := o.Get()
+		if res != id {
+			t.Fail()
+		}
+	}
+}
+
+func TestOptionFail(t *testing.T) {
+	id := float64(1)
+	o := f.NewOpt(id, fmt.Errorf("error"))
+	if o.Ok() {
+		t.Fail()
+	}
+}
+
+func TestOptionElse(t *testing.T) {
+	id := float64(1)
+	o := f.NewOpt(id, fmt.Errorf("error"))
+	if o.GetOrElse(0) != 0 {
+		t.Fail()
+	}
+}
+
+func TestFind(t *testing.T) {
+	fn := f.From([]int{1, 2, 3})
+	res := fn.Find(func(i int) bool {
+		return i == 2
+	})
+
+	if !res.Ok() {
+		t.Fail()
+	}
+}
+
+func TestFlatten(t *testing.T) {
+	vals := [][][]int{
+		{
+			{1, 2, 3},
+			{4, 5, 6},
+			{7, 8, 9},
+		},
+	}
+	fn := f.From(vals)
+
+	res0, _ := f.Flatten[[]int](fn).Get()
+	res1, _ := f.Flatten[int](res0).Get()
+
+	if !res1.Is(f.F[int]{
+		Val: []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+	}) {
+		t.Fail()
+	}
 }
 
 func TestChain(t *testing.T) {
