@@ -23,6 +23,22 @@ fn := f.Gen(func (index int) T {
 // limit is the number of elements to generate
 ```
 
+Some functions will use `Option`s:
+
+```golang
+var o f.Option[T]
+
+// check if the option is empty
+var ok bool = o.Ok()
+
+// get the value of the option or error
+res, err := o.Get()
+
+// get the value of the option or a default value
+res := o.GetOrElse(T)
+
+```
+
 Consumer function over a F:
 
 ```golang
@@ -40,9 +56,14 @@ fn.ForAll(func (element T) bool {
 fn.Has(func (element T) bool {
     // return some condition
 })
+
+// find the first element that satisfies the predicate
+fn.Find(func (element T) bool {
+    // return some condition
+}
 ```
 
-Modifier function over a F (changes type):
+Modifier function over a F (no type change):
 
 ```golang
 // Get first value
@@ -81,7 +102,7 @@ fn.Zip(f.F[T]{
 })
 ```
 
-Transformer function over an F (doesn't change type):
+Transformer function over an F (type change):
 
 ```golang
 // Map values to a new type
@@ -93,6 +114,10 @@ f.Map(fn, func (element T) U {
 f.Fold(fn, startingValue U, func (acc U, element T) U {
     // return some new value of type U
 })
+
+// Go down a dimension in a F's value
+// for example from a [][]int{} to a []int{}
+var flattened Option[T] = f.Flatten[T](fn)
 ```
 
 
