@@ -2,6 +2,8 @@
 
 ## functional programming in go
 
+F is an unobtrusive functional programming library, that leaves your original data alone. Every transformation can be extracted separately and you can build transpormation chains, just like you would in something like Scala or OCaml.
+
 ```bash
 go get github.com/RazorSh4rk/f
 ```
